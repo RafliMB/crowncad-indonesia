@@ -33,11 +33,129 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
-        .hero-aurora { background: radial-gradient(125% 95% at 50% 0%, #040A1E 0%, #081848 34%, #0F52BA 58%, #1D63FF 73%, #76A9FF 86%, #E2EEFF 94%, #F8FAFC 100%); }
-        .hero-wing-left { position: absolute; top: 22%; left: -12%; width: 55%; height: 420px; background: radial-gradient(ellipse at center, rgba(29, 99, 255, 0.58) 0%, rgba(15, 82, 186, 0) 70%); transform: rotate(22deg); pointer-events: none; z-index: 1; }
-        .hero-wing-right { position: absolute; top: 22%; right: -12%; width: 55%; height: 420px; background: radial-gradient(ellipse at center, rgba(29, 99, 255, 0.58) 0%, rgba(15, 82, 186, 0) 70%); transform: rotate(-22deg); pointer-events: none; z-index: 1; }
+        .hero-aurora {
+            background:
+                radial-gradient(58% 66% at 78% 34%, rgba(29, 99, 255, 0.16) 0%, rgba(29, 99, 255, 0.05) 45%, rgba(29, 99, 255, 0) 72%),
+                radial-gradient(52% 62% at 14% 14%, rgba(0, 166, 255, 0.20) 0%, rgba(0, 166, 255, 0) 68%),
+                linear-gradient(160deg, #040A1E 0%, #061334 38%, #0A2455 68%, #050F28 100%);
+        }
 
-        .cad-grid { background-size: 32px 32px; background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px); }
+        /* Latar hero: visual produk full-bleed + scrim agar teks tetap terbaca */
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .hero-bg img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: 80% 50%;
+        }
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(90deg, rgba(4, 10, 30, 0.96) 0%, rgba(4, 10, 30, 0.92) 22%, rgba(4, 10, 30, 0.68) 42%, rgba(4, 10, 30, 0.2) 66%, rgba(4, 10, 30, 0) 84%),
+                linear-gradient(180deg, rgba(4, 10, 30, 0.72) 0%, rgba(4, 10, 30, 0.18) 24%, rgba(4, 10, 30, 0) 44%);
+        }
+        @media (max-width: 1279px) {
+            .hero-bg img { object-position: 80% 48%; }
+            .hero-bg::after {
+                background:
+                    linear-gradient(180deg, rgba(4, 10, 30, 0.93) 0%, rgba(4, 10, 30, 0.86) 42%, rgba(4, 10, 30, 0.9) 66%, rgba(4, 10, 30, 0.95) 100%);
+            }
+        }
+
+        /* Tombol WhatsApp melayang: ikon menggelinding, pill melebar menampilkan teks */
+        .wa-float {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            box-shadow: 0 14px 34px -10px rgba(18, 140, 126, 0.75), 0 2px 6px rgba(0, 0, 0, 0.18);
+            transition: box-shadow 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .wa-float:hover,
+        .wa-float:focus-visible {
+            box-shadow: 0 18px 40px -10px rgba(18, 140, 126, 0.9), 0 4px 10px rgba(0, 0, 0, 0.22);
+        }
+        .wa-float-icon {
+            display: grid;
+            place-items: center;
+            flex: none;
+            transition: transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .wa-float:hover .wa-float-icon,
+        .wa-float:focus-visible .wa-float-icon { transform: rotate(360deg); }
+        .wa-float-text {
+            max-width: 0;
+            opacity: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            padding-left: 0;
+            padding-right: 0;
+            transform: translateX(-12px);
+            transition:
+                max-width 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+                opacity 0.3s ease,
+                padding 0.4s ease,
+                transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .wa-float:hover .wa-float-text,
+        .wa-float:focus-visible .wa-float-text {
+            max-width: 160px;
+            opacity: 1;
+            padding-left: 12px;
+            padding-right: 20px;
+            transform: translateX(0);
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .wa-float-icon,
+            .wa-float-text { transition: none; }
+            .wa-float:hover .wa-float-icon,
+            .wa-float:focus-visible .wa-float-icon { transform: none; }
+        }
+
+        /* Dot navigasi kartu (gaya sama seperti carousel trainer) */
+        .cap-dot { position: relative; }
+        .cap-dot::after {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 9999px;
+        }
+
+        /* Tombol kembali ke atas (muncul setelah scroll) */
+        .to-top {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px) scale(0.92);
+            transition:
+                opacity 0.28s ease,
+                transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.28s ease,
+                color 0.2s ease,
+                border-color 0.2s ease,
+                visibility 0.28s;
+        }
+        .to-top.is-visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+        .to-top:hover { box-shadow: 0 16px 32px -12px rgba(15, 23, 42, 0.5); }
+        @media (prefers-reduced-motion: reduce) {
+            .to-top { transform: none; transition: opacity 0.2s linear; }
+            .to-top.is-visible { transform: none; }
+        }
+
+        .hero-wing-left { position: absolute; top: 20%; left: -14%; width: 52%; height: 400px; background: radial-gradient(ellipse at center, rgba(29, 99, 255, 0.42) 0%, rgba(15, 82, 186, 0) 70%); transform: rotate(22deg); pointer-events: none; z-index: 0; }
+        .hero-wing-right { position: absolute; top: 30%; right: -16%; width: 46%; height: 380px; background: radial-gradient(ellipse at center, rgba(29, 99, 255, 0.26) 0%, rgba(15, 82, 186, 0) 70%); transform: rotate(-22deg); pointer-events: none; z-index: 0; }
+
         .navbar-glass { background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(0, 0, 0, 0.08); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); }
         .serif-accent { font-family: 'Instrument Serif', serif; font-style: italic; letter-spacing: -0.01em; }
         /* Samakan leading aksen serif yang tidak memakai text-brand-gradient */
@@ -107,7 +225,7 @@
             }
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 639.98px) {
             .hero-wing-left,
             .hero-wing-right {
                 display: none;
@@ -138,7 +256,8 @@
                 grid-template-columns: 1fr;
             }
             #produk .cap-card {
-                width: 82vw !important;
+                /* Sisakan intipan kartu berikutnya di tepi kanan (bukan sliver tipis) */
+                width: calc(100vw - 6rem) !important;
                 max-width: 330px !important;
             }
             #solusi .grid {
@@ -169,8 +288,8 @@
 
         @media (max-width: 480px) {
             .hero-aurora h1 {
-                font-size: 1.85rem !important;
-                line-height: 1.15 !important;
+                font-size: clamp(1.45rem, 7.2vw, 1.85rem) !important;
+                line-height: 1.18 !important;
             }
             .hero-aurora .serif-accent {
                 font-size: 2.2rem !important;
@@ -666,37 +785,52 @@
     </header>
 
     <!-- Hero -->
-    <section class="hero-aurora pt-28 pb-16 sm:pt-36 sm:pb-24 md:pt-48 md:pb-40 px-4 sm:px-6 relative overflow-hidden min-h-[92svh] sm:min-h-[95svh] md:min-h-[100svh] flex flex-col justify-center">
-        <div class="absolute inset-0 cad-grid pointer-events-none hero-parallax" data-parallax="0.3"></div>
+    <section class="hero-aurora pt-28 pb-16 sm:pt-32 sm:pb-20 md:pb-24 xl:pb-20 px-4 sm:px-6 relative overflow-hidden min-h-[92svh] sm:min-h-0 xl:min-h-[100svh] flex items-center">
+        <div class="hero-bg">
+            <img src="assets/images/hero/crowncad-bg-2400.webp"
+                 srcset="assets/images/hero/crowncad-bg-1200.webp 1200w, assets/images/hero/crowncad-bg-2400.webp 2400w"
+                 sizes="100vw"
+                 alt="Workspace CrownCAD di browser: model mesin 3D dengan panel riwayat versi, berbagi tautan, dan catatan desain"
+                 width="2400" height="1208" loading="eager" decoding="async" fetchpriority="high">
+        </div>
         <div class="hero-wing-left hero-parallax" data-parallax="0.2"></div>
         <div class="hero-wing-right hero-parallax" data-parallax="0.2"></div>
 
-        <div class="max-w-7xl mx-auto text-center relative z-10 w-full py-2 sm:py-6">
-            <div class="max-w-5xl mx-auto reveal-up">
-                <div class="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full mb-4 sm:mb-6 backdrop-blur-md bg-white/10 border border-white/30 reveal-blur delay-100 max-w-[92%] sm:max-w-full mx-auto">
-                    <i class="ph-fill ph-crown text-white text-xs sm:text-sm shrink-0"></i>
-                    <span class="text-[10px] sm:text-[11px] font-bold tracking-wider sm:tracking-widest uppercase text-blue-100">Solusi CAD Cloud-Native<span class="hidden sm:inline"> &bull; Masa Depan CAD Indonesia</span></span>
+        <div class="relative w-full max-w-7xl xl:max-w-[1320px] 2xl:max-w-[1560px] mx-auto">
+            <div class="grid items-center gap-9 sm:gap-12 xl:grid-cols-[minmax(0,660px)_minmax(0,1fr)] xl:gap-10 2xl:gap-14">
+
+                <div class="text-center xl:text-left max-w-2xl mx-auto xl:max-w-none xl:mx-0 reveal-up">
+                    <div class="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full mb-4 sm:mb-6 backdrop-blur-md bg-gradient-to-b from-white/15 via-white/[0.08] to-white/5 border border-white/25 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.9)] reveal-blur delay-100 max-w-[92%] sm:max-w-full">
+                        <i class="ph-fill ph-crown text-white text-xs sm:text-sm shrink-0"></i>
+                        <span class="text-[10px] sm:text-[11px] font-bold tracking-wider sm:tracking-widest uppercase text-blue-100">Solusi CAD Cloud-Native<span class="hidden sm:inline"> &bull; Masa Depan CAD Indonesia</span></span>
+                    </div>
+
+                    <h1 class="reveal-blur text-[2.15rem] sm:text-[46px] md:text-5xl lg:text-[50px] font-extrabold tracking-tight leading-[1.12] mb-3 sm:mb-4 text-white" style="text-shadow: 0 4px 28px rgba(4, 10, 30, 0.55);">
+                        <span class="text-reveal">CrownCAD — Masa Depan</span>
+                        <span class="mt-1 sm:mt-1.5 block serif-accent font-normal text-[2.5rem] sm:text-[58px] md:text-[64px] lg:text-[70px] text-blue-100 text-reveal">CAD 3D Cloud Indonesia</span>
+                    </h1>
+
+                    <p class="max-w-xl xl:max-w-[520px] mx-auto xl:mx-0 text-sm sm:text-base leading-relaxed mb-6 sm:mb-8 text-slate-200/90 reveal-blur delay-200">
+                        Platform desain 3D berbasis browser dengan kolaborasi real-time, dual-kernel modeling (DGM + DCS), dan kontrol versi cerdas untuk manufaktur modern.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-center xl:justify-start gap-2.5 sm:gap-3.5 w-full sm:w-auto max-w-sm sm:max-w-none mx-auto xl:mx-0 reveal-blur delay-300">
+                        <a href="https://api.whatsapp.com/send?phone=6281902244660&text=Halo%20Vexa%2C%20saya%20ingin%20mendaftar%20akun%20CrownCAD" target="_blank" rel="noopener" class="w-full sm:w-auto px-7 py-3 sm:py-3.5 rounded-full font-bold text-sm shadow-xl hover:scale-105 active:scale-95 transition flex items-center justify-center gap-2 bg-white text-slate-900 hover:shadow-[0_18px_45px_-12px_rgba(255,255,255,0.45)]">
+                            <span>Daftar Gratis</span>
+                            <i class="ph-bold ph-caret-right"></i>
+                        </a>
+                        <a href="https://api.whatsapp.com/send?phone=6281902244660&text=Halo%20Vexa%2C%20saya%20ingin%20minta%20penawaran%20CrownCAD" target="_blank" rel="noopener" class="w-full sm:w-auto px-6 py-3 sm:py-3.5 rounded-full font-semibold text-sm backdrop-blur-md hover:bg-slate-900/90 active:scale-95 transition flex items-center justify-center gap-2 text-white border border-white/30 bg-slate-900/80 shadow-lg">
+                            <i class="ph-fill ph-chats-circle text-lg text-sky-300"></i>
+                            <span>Minta Penawaran</span>
+                        </a>
+                    </div>
+
+                    <p class="mt-7 hidden xl:flex items-center gap-2 text-xs font-medium text-slate-300/75 reveal-blur delay-300">
+                        <span class="grid place-items-center h-4 w-4 rounded-full bg-sky-400/15 text-sky-300 shrink-0"><i class="ph-bold ph-check text-[9px]"></i></span>
+                        Dipercaya tim engineering PT Vexa Dinamika Teknologi
+                    </p>
                 </div>
 
-                <h1 class="reveal-blur text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[80px] font-extrabold tracking-tight leading-[1.14] mb-3 sm:mb-5 text-white" style="text-shadow: 0 4px 28px rgba(4, 10, 30, 0.55);">
-                    <span class="text-reveal">CrownCAD — Masa Depan</span><br class="hidden sm:inline" /> 
-                    <span class="serif-accent font-normal text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[106px] text-blue-100 text-reveal">CAD 3D Cloud Indonesia</span>
-                </h1>
-
-                <p class="max-w-3xl mx-auto text-xs sm:text-sm md:text-base leading-relaxed mb-6 sm:mb-8 text-slate-200/90 reveal-blur delay-200 px-2 sm:px-0">
-                    Platform desain 3D berbasis browser dengan kolaborasi real-time, dual-kernel modeling (DGM + DCS), dan kontrol versi cerdas untuk manufaktur modern.
-                </p>
-
-                <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-3.5 w-full sm:w-auto max-w-sm sm:max-w-none mx-auto mb-6 sm:mb-12 reveal-blur delay-300">
-                    <a href="https://api.whatsapp.com/send?phone=6281902244660&text=Halo%20Vexa%2C%20saya%20ingin%20mendaftar%20akun%20CrownCAD" target="_blank" rel="noopener" class="w-full sm:w-auto px-7 py-3 sm:py-3.5 rounded-full font-bold text-sm shadow-xl hover:scale-105 active:scale-95 transition flex items-center justify-center gap-2 bg-white text-slate-900">
-                        <span>Daftar Gratis</span>
-                        <i class="ph-bold ph-caret-right"></i>
-                    </a>
-                    <a href="https://api.whatsapp.com/send?phone=6281902244660&text=Halo%20Vexa%2C%20saya%20ingin%20minta%20penawaran%20CrownCAD" target="_blank" rel="noopener" class="w-full sm:w-auto px-6 py-3 sm:py-3.5 rounded-full font-semibold text-sm backdrop-blur-md hover:bg-slate-900/90 active:scale-95 transition flex items-center justify-center gap-2 text-white border border-white/30 bg-slate-900/80 shadow-lg">
-                        <i class="ph-fill ph-chats-circle text-lg text-sky-300"></i>
-                        <span>Minta Penawaran</span>
-                    </a>
-                </div>
             </div>
         </div>
     </section>
@@ -814,7 +948,7 @@
 
                 <div id="slider-core" class="flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar py-2 -mx-4 px-4 sm:mx-0 sm:px-0 scroll-pl-4 scroll-pr-4" style="max-width: 1188px; margin-left: auto; margin-right: auto;">
                     <!-- Card 1: Sketching -->
-                    <div class="cap-card flex-none min-w-0 w-[82vw] max-w-[340px] sm:w-[calc(46%-0.5rem)] lg:w-[calc(33.333%-1rem)] xl:w-[380px] snap-start bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-2xl hover:shadow-slate-300/50 hover:border-blue-200 hover:-translate-y-1 transition-all duration-300 flex flex-col reveal-up delay-100">
+                    <div class="cap-card flex-none min-w-0 w-[82vw] max-w-[380px] sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)] snap-start bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-2xl hover:shadow-slate-300/50 hover:border-blue-200 hover:-translate-y-1 transition-all duration-300 flex flex-col reveal-up delay-100">
                         <div class="relative h-44 sm:h-60 bg-gradient-to-br from-slate-50 via-white to-blue-50/60 p-4 sm:p-6 flex items-center justify-center border-b border-slate-100 overflow-hidden">
                             <img src="assets/images/core modeling modules/sketch.jpg" alt="Sketching" class="max-h-full max-w-full object-contain mix-blend-multiply" />
                         </div>
@@ -830,7 +964,7 @@
                     </div>
 
                     <!-- Card 2: Part Design -->
-                    <div class="cap-card flex-none min-w-0 w-[82vw] max-w-[340px] sm:w-[calc(46%-0.5rem)] lg:w-[calc(33.333%-1rem)] xl:w-[380px] snap-start bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-2xl hover:shadow-slate-300/50 hover:border-blue-200 hover:-translate-y-1 transition-all duration-300 flex flex-col reveal-up delay-200">
+                    <div class="cap-card flex-none min-w-0 w-[82vw] max-w-[380px] sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)] snap-start bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-2xl hover:shadow-slate-300/50 hover:border-blue-200 hover:-translate-y-1 transition-all duration-300 flex flex-col reveal-up delay-200">
                         <div class="relative h-44 sm:h-60 bg-gradient-to-br from-slate-50 via-white to-blue-50/60 p-4 sm:p-6 flex items-center justify-center border-b border-slate-100 overflow-hidden">
                             <img src="assets/images/core modeling modules/part.jpg" alt="Part Design" class="max-h-full max-w-full object-contain mix-blend-multiply" />
                         </div>
@@ -846,7 +980,7 @@
                     </div>
 
                     <!-- Card 3: Assembly Design -->
-                    <div class="cap-card flex-none min-w-0 w-[82vw] max-w-[340px] sm:w-[calc(46%-0.5rem)] lg:w-[calc(33.333%-1rem)] xl:w-[380px] snap-start bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-2xl hover:shadow-slate-300/50 hover:border-blue-200 hover:-translate-y-1 transition-all duration-300 flex flex-col reveal-up delay-300">
+                    <div class="cap-card flex-none min-w-0 w-[82vw] max-w-[380px] sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)] snap-start bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-2xl hover:shadow-slate-300/50 hover:border-blue-200 hover:-translate-y-1 transition-all duration-300 flex flex-col reveal-up delay-300">
                         <div class="relative h-44 sm:h-60 bg-gradient-to-br from-slate-50 via-white to-blue-50/60 p-4 sm:p-6 flex items-center justify-center border-b border-slate-100 overflow-hidden">
                             <img src="assets/images/core modeling modules/assembly.jpg" alt="Assembly Design" class="max-h-full max-w-full object-contain mix-blend-multiply" />
                         </div>
@@ -862,7 +996,7 @@
                     </div>
 
                     <!-- Card 4: Drawing -->
-                    <div class="cap-card flex-none min-w-0 w-[82vw] max-w-[340px] sm:w-[calc(46%-0.5rem)] lg:w-[calc(33.333%-1rem)] xl:w-[380px] snap-start bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-2xl hover:shadow-slate-300/50 hover:border-blue-200 hover:-translate-y-1 transition-all duration-300 flex flex-col reveal-up delay-400">
+                    <div class="cap-card flex-none min-w-0 w-[82vw] max-w-[380px] sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)] snap-start bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-2xl hover:shadow-slate-300/50 hover:border-blue-200 hover:-translate-y-1 transition-all duration-300 flex flex-col reveal-up delay-400">
                         <div class="relative h-44 sm:h-60 bg-gradient-to-br from-slate-50 via-white to-blue-50/60 p-4 sm:p-6 flex items-center justify-center border-b border-slate-100 overflow-hidden">
                             <img src="assets/images/core modeling modules/drawing.jpg" alt="Drawing" class="max-h-full max-w-full object-contain mix-blend-multiply" />
                         </div>
@@ -878,7 +1012,7 @@
                     </div>
 
                     <!-- Card 5: Data Compatibility -->
-                    <div class="cap-card flex-none min-w-0 w-[82vw] max-w-[340px] sm:w-[calc(46%-0.5rem)] lg:w-[calc(33.333%-1rem)] xl:w-[380px] snap-start bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-2xl hover:shadow-slate-300/50 hover:border-blue-200 hover:-translate-y-1 transition-all duration-300 flex flex-col reveal-up delay-500">
+                    <div class="cap-card flex-none min-w-0 w-[82vw] max-w-[380px] sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)] snap-start bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-2xl hover:shadow-slate-300/50 hover:border-blue-200 hover:-translate-y-1 transition-all duration-300 flex flex-col reveal-up delay-500">
                         <div class="relative h-44 sm:h-60 bg-gradient-to-br from-slate-50 via-white to-blue-50/60 p-4 sm:p-6 flex items-center justify-center border-b border-slate-100 overflow-hidden">
                             <img src="assets/images/core modeling modules/compatibility.jpg" alt="Data Compatibility" class="max-h-full max-w-full object-contain mix-blend-multiply" />
                         </div>
@@ -893,13 +1027,16 @@
                     </div>
                 </div>
 
-                <div class="mt-6 sm:mt-7 flex items-center justify-center gap-3">
-                    <button onclick="slideCards('core', -1)" aria-label="Previous" class="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white border border-slate-200 text-slate-600 shadow-sm hover:text-blue-600 hover:border-blue-300 hover:shadow-md active:scale-95 transition-all duration-200 disabled:hover:text-slate-600 disabled:hover:border-slate-200 disabled:hover:shadow-sm">
-                        <i class="ph-bold ph-caret-left text-base sm:text-lg"></i>
-                    </button>
-                    <button onclick="slideCards('core', 1)" aria-label="Next" class="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white border border-slate-200 text-slate-600 shadow-sm hover:text-blue-600 hover:border-blue-300 hover:shadow-md active:scale-95 transition-all duration-200 disabled:hover:text-slate-600 disabled:hover:border-slate-200 disabled:hover:shadow-sm">
-                        <i class="ph-bold ph-caret-right text-base sm:text-lg"></i>
-                    </button>
+                <div class="mt-6 sm:mt-7 flex items-center justify-center">
+                    <div class="inline-flex items-center gap-2 p-1 rounded-full bg-slate-100/90 border border-slate-200/70 shadow-sm">
+                        <button type="button" data-slide="prev" onclick="slideCards('core', -1)" aria-label="Kartu sebelumnya" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white text-slate-600 hover:text-slate-900 shadow-sm hover:shadow transition-all duration-200 flex items-center justify-center active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-slate-600 disabled:hover:shadow-sm">
+                            <i class="ph-bold ph-caret-left text-base"></i>
+                        </button>
+                        <div role="group" class="flex items-center gap-1.5 px-2" data-dots="core" aria-label="Navigasi kartu"></div>
+                        <button type="button" data-slide="next" onclick="slideCards('core', 1)" aria-label="Kartu berikutnya" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white text-slate-600 hover:text-slate-900 shadow-sm hover:shadow transition-all duration-200 flex items-center justify-center active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-slate-600 disabled:hover:shadow-sm">
+                            <i class="ph-bold ph-caret-right text-base"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -908,7 +1045,7 @@
 
                 <div id="slider-pro" class="flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar py-2 -mx-4 px-4 sm:mx-0 sm:px-0 scroll-pl-4 scroll-pr-4" style="max-width: 1188px; margin-left: auto; margin-right: auto;">
                     <!-- Card 1: Sheet Metal Module -->
-                    <div class="cap-card flex-none min-w-0 w-[82vw] max-w-[340px] sm:w-[calc(46%-0.5rem)] lg:w-[calc(33.333%-1rem)] xl:w-[380px] snap-start bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-2xl hover:shadow-slate-300/50 hover:border-blue-200 hover:-translate-y-1 transition-all duration-300 flex flex-col reveal-up delay-100">
+                    <div class="cap-card flex-none min-w-0 w-[82vw] max-w-[380px] sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)] snap-start bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-2xl hover:shadow-slate-300/50 hover:border-blue-200 hover:-translate-y-1 transition-all duration-300 flex flex-col reveal-up delay-100">
                         <div class="relative h-44 sm:h-60 bg-gradient-to-br from-slate-50 via-white to-blue-50/60 p-4 sm:p-6 flex items-center justify-center border-b border-slate-100 overflow-hidden">
                             <img src="assets/images/professional modules/sheet-metal-module.jpg" alt="Sheet Metal Module" class="max-h-full max-w-full object-contain mix-blend-multiply" />
                         </div>
@@ -922,7 +1059,7 @@
                     </div>
 
                     <!-- Card 2: Weldment Module -->
-                    <div class="cap-card flex-none min-w-0 w-[82vw] max-w-[340px] sm:w-[calc(46%-0.5rem)] lg:w-[calc(33.333%-1rem)] xl:w-[380px] snap-start bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-2xl hover:shadow-slate-300/50 hover:border-blue-200 hover:-translate-y-1 transition-all duration-300 flex flex-col reveal-up delay-200">
+                    <div class="cap-card flex-none min-w-0 w-[82vw] max-w-[380px] sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)] snap-start bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-2xl hover:shadow-slate-300/50 hover:border-blue-200 hover:-translate-y-1 transition-all duration-300 flex flex-col reveal-up delay-200">
                         <div class="relative h-44 sm:h-60 bg-gradient-to-br from-slate-50 via-white to-blue-50/60 p-4 sm:p-6 flex items-center justify-center border-b border-slate-100 overflow-hidden">
                             <img src="assets/images/professional modules/weldment-module.jpg" alt="Weldment Module" class="max-h-full max-w-full object-contain mix-blend-multiply" />
                         </div>
@@ -938,7 +1075,7 @@
                     </div>
 
                     <!-- Card 3: MBD -->
-                    <div class="cap-card flex-none min-w-0 w-[82vw] max-w-[340px] sm:w-[calc(46%-0.5rem)] lg:w-[calc(33.333%-1rem)] xl:w-[380px] snap-start bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-2xl hover:shadow-slate-300/50 hover:border-blue-200 hover:-translate-y-1 transition-all duration-300 flex flex-col reveal-up delay-300">
+                    <div class="cap-card flex-none min-w-0 w-[82vw] max-w-[380px] sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)] snap-start bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-2xl hover:shadow-slate-300/50 hover:border-blue-200 hover:-translate-y-1 transition-all duration-300 flex flex-col reveal-up delay-300">
                         <div class="relative h-44 sm:h-60 bg-gradient-to-br from-slate-50 via-white to-blue-50/60 p-4 sm:p-6 flex items-center justify-center border-b border-slate-100 overflow-hidden">
                             <img src="assets/images/professional modules/mbd.jpg" alt="MBD" class="max-h-full max-w-full object-contain mix-blend-multiply" />
                         </div>
@@ -953,7 +1090,7 @@
                     </div>
 
                     <!-- Card 4: Animation -->
-                    <div class="cap-card flex-none min-w-0 w-[82vw] max-w-[340px] sm:w-[calc(46%-0.5rem)] lg:w-[calc(33.333%-1rem)] xl:w-[380px] snap-start bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-2xl hover:shadow-slate-300/50 hover:border-blue-200 hover:-translate-y-1 transition-all duration-300 flex flex-col reveal-up delay-400">
+                    <div class="cap-card flex-none min-w-0 w-[82vw] max-w-[380px] sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)] snap-start bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:shadow-2xl hover:shadow-slate-300/50 hover:border-blue-200 hover:-translate-y-1 transition-all duration-300 flex flex-col reveal-up delay-400">
                         <div class="relative h-44 sm:h-60 bg-gradient-to-br from-slate-50 via-white to-blue-50/60 p-4 sm:p-6 flex items-center justify-center border-b border-slate-100 overflow-hidden">
                             <img src="assets/images/professional modules/animation.png" alt="Animation" class="max-h-full max-w-full object-contain mix-blend-multiply" />
                         </div>
@@ -968,13 +1105,16 @@
                     </div>
                 </div>
 
-                <div class="mt-6 sm:mt-7 flex items-center justify-center gap-3">
-                    <button onclick="slideCards('pro', -1)" aria-label="Previous" class="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white border border-slate-200 text-slate-600 shadow-sm hover:text-blue-600 hover:border-blue-300 hover:shadow-md active:scale-95 transition-all duration-200 disabled:hover:text-slate-600 disabled:hover:border-slate-200 disabled:hover:shadow-sm">
-                        <i class="ph-bold ph-caret-left text-base sm:text-lg"></i>
-                    </button>
-                    <button onclick="slideCards('pro', 1)" aria-label="Next" class="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white border border-slate-200 text-slate-600 shadow-sm hover:text-blue-600 hover:border-blue-300 hover:shadow-md active:scale-95 transition-all duration-200 disabled:hover:text-slate-600 disabled:hover:border-slate-200 disabled:hover:shadow-sm">
-                        <i class="ph-bold ph-caret-right text-base sm:text-lg"></i>
-                    </button>
+                <div class="mt-6 sm:mt-7 flex items-center justify-center">
+                    <div class="inline-flex items-center gap-2 p-1 rounded-full bg-slate-100/90 border border-slate-200/70 shadow-sm">
+                        <button type="button" data-slide="prev" onclick="slideCards('pro', -1)" aria-label="Kartu sebelumnya" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white text-slate-600 hover:text-slate-900 shadow-sm hover:shadow transition-all duration-200 flex items-center justify-center active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-slate-600 disabled:hover:shadow-sm">
+                            <i class="ph-bold ph-caret-left text-base"></i>
+                        </button>
+                        <div role="group" class="flex items-center gap-1.5 px-2" data-dots="pro" aria-label="Navigasi kartu"></div>
+                        <button type="button" data-slide="next" onclick="slideCards('pro', 1)" aria-label="Kartu berikutnya" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white text-slate-600 hover:text-slate-900 shadow-sm hover:shadow transition-all duration-200 flex items-center justify-center active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-slate-600 disabled:hover:shadow-sm">
+                            <i class="ph-bold ph-caret-right text-base"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -1894,16 +2034,22 @@
     </footer>
 
     <!-- Floating WhatsApp -->
-    <a id="wa-float" href="https://api.whatsapp.com/send?phone=6281902244660&text=Halo%20Vexa%2C%20saya%20ingin%20konsultasi%20terkait%20CrownCAD" target="_blank" rel="noopener" aria-label="Chat WhatsApp dengan tim Vexa Dinamika Teknologi"
-        class="fixed right-4 bottom-4 sm:right-6 sm:bottom-6 z-30 inline-flex items-center justify-center gap-2.5 w-14 h-14 sm:w-auto sm:h-auto sm:pl-4 sm:pr-5 sm:py-3.5 rounded-full text-white font-bold text-sm whitespace-nowrap shadow-2xl hover:scale-[1.04] active:scale-95 transition-transform duration-200"
-        style="background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); box-shadow: 0 14px 34px -10px rgba(18, 140, 126, 0.75);">
-        <i class="ph-fill ph-whatsapp-logo text-2xl leading-none"></i>
-        <span class="hidden sm:inline">Chat WhatsApp</span>
-        <span class="absolute -top-0.5 -right-0.5 hidden sm:flex w-3 h-3">
-            <span class="absolute inline-flex w-full h-full rounded-full bg-emerald-300 opacity-75 animate-ping"></span>
-            <span class="relative inline-flex w-3 h-3 rounded-full bg-emerald-400 ring-2 ring-[#128C7E]"></span>
+    <a id="wa-float" href="https://api.whatsapp.com/send?phone=6281902244660&text=Halo%20Vexa%2C%20saya%20ingin%20konsultasi%20terkait%20CrownCAD" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp"
+        class="wa-float fixed left-4 bottom-4 sm:left-6 sm:bottom-6 z-30 inline-flex items-center justify-start h-14 sm:h-16 rounded-full text-white">
+        <span class="wa-float-icon w-14 h-14 sm:w-16 sm:h-16">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="w-[26px] h-[26px] sm:w-8 sm:h-8" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
         </span>
+        <span class="wa-float-text">Chat with us</span>
     </a>
+
+    <!-- Tombol kembali ke atas -->
+    <button id="to-top" type="button" aria-label="Kembali ke atas halaman" aria-hidden="true" tabindex="-1"
+        class="to-top fixed right-4 bottom-4 sm:right-6 sm:bottom-6 z-30 grid place-items-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 backdrop-blur border border-slate-300/80 text-slate-700 shadow-xl hover:text-[#1D63FF] hover:border-[#1D63FF]/40 active:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1D63FF]">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+            <path d="M12 19V5"></path>
+            <path d="M5 12l7-7 7 7"></path>
+        </svg>
+    </button>
 
     <script>
         // ============================================
@@ -2313,68 +2459,116 @@
         // ============================================
         // HORIZONTAL CARD SLIDING
         // ============================================
-        function slideCards(panelKey, direction) {
+        const capPanelKeys = ['core', 'pro'];
+
+        // Ukuran kartu + jarak antar kartu, dipakai untuk tombol & dot
+        function capMetrics(panelKey) {
             const slider = document.getElementById('slider-' + panelKey);
-            if (!slider) return;
+            if (!slider) return null;
             const card = slider.querySelector('.cap-card');
-            if (!card) return;
-            
-            // Get actual rendered width
+            if (!card) return null;
             const cardWidth = card.getBoundingClientRect().width;
-            const gap = 24;
-            const step = cardWidth > 0 ? cardWidth + gap : 384; // fallback 360 + 24
-            
-            slider.scrollBy({ left: direction * step, behavior: 'smooth' });
-            
-            // Update button states after scroll
-            setTimeout(() => updateSliderButtons(panelKey), 300);
+            if (cardWidth === 0) return null; // panel sedang tersembunyi
+            const styles = getComputedStyle(slider);
+            const gap = parseFloat(styles.columnGap || styles.gap) || 24;
+            return {
+                slider,
+                step: cardWidth + gap,
+                max: Math.max(0, slider.scrollWidth - slider.clientWidth)
+            };
         }
-        
-        // Update slider button states based on scroll position
-        function updateSliderButtons(panelKey) {
-            const slider = document.getElementById('slider-' + panelKey);
-            const panel = document.getElementById('tab-panel-' + panelKey);
-            if (!slider || !panel) return;
-            
-            const leftBtn = panel.querySelector('button[aria-label="Previous"]');
-            const rightBtn = panel.querySelector('button[aria-label="Next"]');
-            if (!leftBtn || !rightBtn) return;
-            
-            const scrollLeft = slider.scrollLeft;
-            const maxScroll = slider.scrollWidth - slider.clientWidth;
-            
-            // Left button state - use inline style to override group-hover opacity
-            if (scrollLeft <= 1) {
-                leftBtn.disabled = true;
-                leftBtn.style.opacity = '0.3';
-                leftBtn.style.cursor = 'not-allowed';
-            } else {
-                leftBtn.disabled = false;
-                leftBtn.style.opacity = '';
-                leftBtn.style.cursor = '';
+
+        // Jumlah dot mengikuti jumlah posisi geser yang tersedia (bisa berubah per lebar layar)
+        function buildCapDots(panelKey) {
+            const dotsWrap = document.querySelector('[data-dots="' + panelKey + '"]');
+            const m = capMetrics(panelKey);
+            if (!dotsWrap || !m) return;
+
+            const positions = Math.min(12, Math.max(1, Math.round(m.max / m.step) + 1));
+            if (dotsWrap.dataset.count !== String(positions)) {
+                dotsWrap.dataset.count = String(positions);
+                dotsWrap.innerHTML = Array.from({ length: positions }, (_, i) => (
+                    '<button type="button" data-index="' + i + '" aria-label="Posisi kartu ' + (i + 1) + '" ' +
+                    'class="cap-dot w-2 h-2 rounded-full bg-slate-300 transition-all duration-300"></button>'
+                )).join('');
+                dotsWrap.querySelectorAll('.cap-dot').forEach(dot => {
+                    dot.addEventListener('click', () => {
+                        const mm = capMetrics(panelKey);
+                        if (!mm) return;
+                        const index = Number(dot.dataset.index);
+                        mm.slider.scrollTo({
+                            left: Math.min(index * mm.step, mm.max),
+                            behavior: prefersReducedMotion ? 'auto' : 'smooth'
+                        });
+                    });
+                });
             }
-            
-            // Right button state
-            if (scrollLeft >= maxScroll - 1) {
-                rightBtn.disabled = true;
-                rightBtn.style.opacity = '0.3';
-                rightBtn.style.cursor = 'not-allowed';
-            } else {
-                rightBtn.disabled = false;
-                rightBtn.style.opacity = '';
-                rightBtn.style.cursor = '';
-            }
+            syncCapDots(panelKey, m);
         }
-        
-        // Initialize button states on load and add scroll listeners
-        window.addEventListener('DOMContentLoaded', () => {
-            ['core', 'pro', 'ent', 'adv'].forEach(panelKey => {
-                const slider = document.getElementById('slider-' + panelKey);
-                if (slider) {
-                    updateSliderButtons(panelKey);
-                    slider.addEventListener('scroll', () => updateSliderButtons(panelKey));
-                }
+
+        function syncCapDots(panelKey, metrics) {
+            const dotsWrap = document.querySelector('[data-dots="' + panelKey + '"]');
+            const m = metrics || capMetrics(panelKey);
+            if (!dotsWrap || !m || !dotsWrap.children.length) return;
+            const active = Math.max(0, Math.min(Math.round(m.slider.scrollLeft / m.step), dotsWrap.children.length - 1));
+            Array.from(dotsWrap.children).forEach((dot, i) => {
+                const on = i === active;
+                dot.classList.toggle('bg-blue-600', on);
+                dot.classList.toggle('bg-slate-300', !on);
+                if (on) dot.setAttribute('aria-current', 'true');
+                else dot.removeAttribute('aria-current');
             });
+        }
+
+        function slideCards(panelKey, direction) {
+            const m = capMetrics(panelKey);
+            if (!m) return;
+            m.slider.scrollBy({
+                left: direction * m.step,
+                behavior: prefersReducedMotion ? 'auto' : 'smooth'
+            });
+            setTimeout(() => updateSliderButtons(panelKey), 320);
+        }
+
+        // Sinkronkan tombol, dot, dan fade tepi slider
+        function updateSliderButtons(panelKey) {
+            const m = capMetrics(panelKey);
+            const panel = document.getElementById('tab-panel-' + panelKey);
+            if (!m || !panel) return;
+
+            const prevBtn = panel.querySelector('[data-slide="prev"]');
+            const nextBtn = panel.querySelector('[data-slide="next"]');
+            const scrollLeft = m.slider.scrollLeft;
+
+            if (prevBtn) prevBtn.disabled = scrollLeft <= 2;
+            if (nextBtn) nextBtn.disabled = scrollLeft >= m.max - 2;
+
+            buildCapDots(panelKey);
+        }
+
+        function initCapSliders() {
+            capPanelKeys.forEach(panelKey => {
+                const slider = document.getElementById('slider-' + panelKey);
+                if (!slider) return;
+                // Listener dipasang untuk semua panel, termasuk yang masih hidden,
+                // supaya tab lain tetap tersinkron saat pertama kali dibuka.
+                slider.addEventListener('scroll', () => updateSliderButtons(panelKey), { passive: true });
+                updateSliderButtons(panelKey);
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initCapSliders);
+        } else {
+            initCapSliders();
+        }
+
+        let capResizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(capResizeTimer);
+            capResizeTimer = setTimeout(() => {
+                capPanelKeys.forEach(updateSliderButtons);
+            }, 150);
         });
 
         // ============================================
@@ -2772,6 +2966,54 @@
             btn.addEventListener('click', () => renderMengapa(idx));
         });
         renderMengapa(0);
+
+        // ============================================
+        // TOMBOL KEMBALI KE ATAS
+        // ============================================
+        const toTopBtn = document.getElementById('to-top');
+        if (toTopBtn) {
+            const syncToTop = ({ scroll }) => {
+                const show = scroll > 520;
+                toTopBtn.classList.toggle('is-visible', show);
+                toTopBtn.setAttribute('aria-hidden', show ? 'false' : 'true');
+                toTopBtn.tabIndex = show ? 0 : -1;
+            };
+            lenisOn(syncToTop);
+            syncToTop({ scroll: window.scrollY });
+
+            toTopBtn.addEventListener('click', () => {
+                // Mobile: langsung sampai (nol delay), sama seperti navigasi menu.
+                const instant = prefersReducedMotion || isMobileNav();
+
+                // Saat lompat instan, tombol langsung hilang tanpa fade-out
+                // supaya tidak terlihat "nyangkut" di atas setelah halaman sampai.
+                if (instant) {
+                    toTopBtn.style.transition = 'none';
+                    toTopBtn.classList.remove('is-visible');
+                    toTopBtn.setAttribute('aria-hidden', 'true');
+                    toTopBtn.tabIndex = -1;
+                    setTimeout(() => { toTopBtn.style.transition = ''; }, 220);
+                }
+
+                if (lenis) {
+                    lenis.scrollTo(0, {
+                        duration: instant ? 0 : 0.9,
+                        immediate: instant,
+                        easing: (t) => 1 - Math.pow(1 - t, 3)
+                    });
+                } else if (instant) {
+                    // scroll-behavior: smooth di <html> akan menahan lompatan,
+                    // jadi matikan sesaat agar benar-benar tanpa delay.
+                    const root = document.documentElement;
+                    const prev = root.style.scrollBehavior;
+                    root.style.scrollBehavior = 'auto';
+                    window.scrollTo(0, 0);
+                    root.style.scrollBehavior = prev;
+                } else {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+        }
     </script>
 </body>
 </html>
