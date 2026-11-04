@@ -1,1 +1,6 @@
-backup/
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
